@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="zh-TW">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>產業比較分析</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #EAEAEA;
+            color: #2E2E2E;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+        header {
+            background-color: #1F2937;
+            color: #FFFFFF;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .container {
+            flex: 1;
+        }
+        .sector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .stock-block {
+            flex: 1 1 calc(25% - 20px);
+            background-color: #FFFFFF;
+            border: 1px solid #B0B0B0;
+            padding: 20px;
+            text-align: center;
+            border-radius: 15px;
+            font-size: 14px;
+            box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.1);
+        }
+        .stock-block:nth-child(odd) {
+            background-color: #E0F7FA;
+        }
+        .stock-block:nth-child(even) {
+            background-color: #FFF9C4;
+        }
+        footer {
+            background-color: #1F2937;
+            color: #FFFFFF;
+            padding: 10px 0;
+            text-align: center;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>產業比較分析</h1>
+        <p>快速了解不同產業的股票指標</p>
+    </header>
+
+    <div class="container my-5">
+        <div class="mb-4">
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-dark" onclick="setIndustry('tech')">科技業</button>
+                <button type="button" class="btn btn-dark" onclick="setIndustry('finance')">金融業</button>
+                <button type="button" class="btn btn-dark" onclick="setIndustry('manufacture')">製造業</button>
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <label for="indicator" class="form-label">選擇指標</label>
+            <select id="indicator" class="form-select">
+                <option value="roe">ROE</option>
+                <option value="fcf">FCF (百萬)</option>
+                <option value="eps">EPS</option>
+                <option value="pe">本益比 (P/E)</option>
+                <option value="monthlyReturn">近 30 日報酬</option>
+                <option value="biMonthlyReturn">近 60 日報酬</option>
+            </select>
+        </div>
+
+        <div id="sectorContainer" class="sector"></div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 產業比較分析系統. 保留所有權利。</p>
+    </footer>
+
+    <script>
+        const industryData = {
+            tech: [
+                { name: '台積電', code: '2330', roe: 0.15, fcf: 500, eps: 30.5, pe: 15, dailyReturn: 0.025, weeklyReturn: 0.038, monthlyReturn: 0.12, biMonthlyReturn: 0.20 },
+                { name: '聯發科', code: '2454', roe: 0.20, fcf: 300, eps: 42.8, pe: 20, dailyReturn: 0.03, weeklyReturn: 0.045, monthlyReturn: 0.15, biMonthlyReturn: 0.25 },
+            ],
+            finance: [
+                { name: '國泰金', code: '2882', roe: 0.12, fcf: 200, eps: 6.5, pe: 10, dailyReturn: -0.008, weeklyReturn: 0.005, monthlyReturn: 0.02, biMonthlyReturn: 0.04 },
+            ],
+            manufacture: [
+                { name: '中鋼', code: '2002', roe: 0.08, fcf: 100, eps: 4.3, pe: 8, dailyReturn: 0.005, weeklyReturn: 0.018, monthlyReturn: 0.06, biMonthlyReturn: 0.10 },
+            ],
+        };
+
+        let currentIndustry = 'tech';
+
+        function setIndustry(industry) {
+            currentIndustry = industry;
+            const indicator = document.getElementById('indicator').value;
+            renderSector(indicator);
+        }
+
+        function renderSector(indicator) {
+            const container = document.getElementById('sectorContainer');
+            container.innerHTML = '';
+
+            industryData[currentIndustry].forEach(stock => {
+                const value = stock[indicator];
+                container.innerHTML += `
+                    <div class="stock-block">
+                        <strong>${stock.name} (${stock.code})</strong>
+                        <p>${indicator.toUpperCase()}: ${value.toFixed(2)}${indicator === 'fcf' ? ' 百萬' : ''}</p>
+                    </div>
+                `;
+            });
+        }
+
+        document.getElementById('indicator').addEventListener('change', (e) => {
+            renderSector(e.target.value);
+        });
+
+        renderSector('roe');
+    </script>
+</body>
+</html>
+
+
+
+
